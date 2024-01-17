@@ -147,15 +147,7 @@ class App(customtkinter.CTk):
         self.status_display.configure(text='')
 
     def save_images(self):
-        file_paths = []
-        for image in self.images:
-            saved_file_path = save_image.save_classified_image(image[0], f'{image[1]}', 'saved_images')
-            if saved_file_path is None:
-                self.update_status(None)
-                break
-            file_paths.append(saved_file_path)
-        self.update_status(file_paths)
-
+        self.update_status(save_image.save_classified_images(self.images, 'saved_images'))
 
 
 def test(new_app : App):
