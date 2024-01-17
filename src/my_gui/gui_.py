@@ -9,6 +9,9 @@ from output_handler import save_image
 # Get screen resolution
 import ctypes
 user32 = ctypes.windll.user32
+# Get screen size
+# 0 -> width
+# 1 -> height
 screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 # Setup customtkinter theme
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -38,8 +41,8 @@ class App(customtkinter.CTk):
         # Configure grid layout 2x3
         self.columnconfigure(0, weight=4)
         # self.columnconfigure(1, weight=1)
-        # self.rowconfigure(0, weight=4)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(0, weight=5)
+        self.rowconfigure(1, weight=2, minsize=int(screensize[1]*0.08))
 
         # Create view frame
         self.view_frame = customtkinter.CTkFrame(self, fg_color=BACK_GROUND_COLOR, corner_radius=4)
@@ -58,9 +61,9 @@ class App(customtkinter.CTk):
 
 
         # Dimensions for each camera
-        self.camera_width = int(float(screensize[0])/NUM_CAMERA_TYPES)
+        self.camera_width = int(float(screensize[0])/float(NUM_LANES))
         # camera_width = 740
-        self.camera_height = int(float(screensize[1]*0.8)/NUM_LANES)
+        self.camera_height = int(float(screensize[1]*0.8)/float(NUM_CAMERA_TYPES))
         # self.camera_height = self.camera_width*9/16
         # camera_height = 480
 
@@ -136,9 +139,9 @@ class App(customtkinter.CTk):
             output = "Unable to save images."
             status_color = RED_STATUS_COLOR
         else:
-            output = f"Sucessfully saved {len(file_paths)} images as:"
-            for file_path in file_paths:
-                output += f"\n    {file_path}"
+            output = f"Sucessfully saved {len(file_paths)} images."
+            # for file_path in file_paths:
+            #     output += f"\n    {file_path}"
             status_color = GREEN_STATUS_COLOR
         self.status_display.configure(text=output, text_color=status_color)
         # self.status_display.after(1000, self.clear_status_display())

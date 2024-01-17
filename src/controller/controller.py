@@ -14,7 +14,7 @@ PLATE_OCR = 1
 CONTAINER_1_CODE = 2
 CONTAINER_2_CODE = 3
 # Defining gui refresh rate
-UPDATE_INTERVAL = 5 #ms
+UPDATE_INTERVAL = 20 #ms
 
 
 # Responsible for controlling the threads, GUI, transfering data from streams to GUI, storing models
@@ -41,7 +41,7 @@ class Controller():
         self.current_frames = []
 
         # Init GUI
-        self.app = gui_.App(['FRONT', 'BACK', 'CON1', 'CON2'], 5)
+        self.app = gui_.App(stream_names, 4)
         # self.app.bind('<KeyPress>', self.close_gui())
         self.app.after(UPDATE_INTERVAL, self.update_gui)
         self.app.mainloop()
