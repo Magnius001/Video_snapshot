@@ -3,7 +3,6 @@ import os
 import queue
 import threading
 import cv2
-import time
 
 class Stream_thread(threading.Thread):
 

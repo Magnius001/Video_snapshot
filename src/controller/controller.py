@@ -1,9 +1,5 @@
-from collections import namedtuple
 import queue
 import threading
-from time import sleep
-from input_handler.get_images import load_images_from
-from utils_ import my_utils
 from stream_processing import stream_thread
 from my_gui import gui_
 from output_handler import save_image
@@ -20,7 +16,7 @@ UPDATE_INTERVAL = 20 #ms
 # Responsible for controlling the threads, GUI, transfering data from streams to GUI, storing models
 class Controller():
     # Initialize the class with a list of camera names and urls, current version only support 4 cams
-    def __init__(self, stream_names: list[str], stream_urls: list[str], folder_path: str) -> None:
+    def __init__(self, stream_names: list[str], stream_urls: list[str], max_col: int, folder_path: str) -> None:
         # Folder to save image
         self.folder_path = folder_path
         # Creat event flag for when a truck is present in the lane
@@ -41,7 +37,7 @@ class Controller():
         self.current_frames = []
 
         # Init GUI
-        self.app = gui_.App(stream_names, 4)
+        self.app = gui_.App(stream_names, max_col)
         # self.app.bind('<KeyPress>', self.close_gui())
         self.app.after(UPDATE_INTERVAL, self.update_gui)
         self.app.mainloop()

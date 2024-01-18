@@ -1,9 +1,6 @@
 import customtkinter
-import time
-import numpy
 import cv2
-import tkinter
-from PIL import Image, ImageTk
+from PIL import Image
 from output_handler import save_image
 
 # Get screen resolution
@@ -24,15 +21,10 @@ GREEN_STATUS_COLOR = '#58e91d'
 RED_STATUS_COLOR = '#f44336'
 WHITE_COLOR = '#ffffff'
 
-# Define number of streams
-NUM_CAMERA_TYPES = 2
-NUM_LANES = 2
-
 # Main app
 class App(customtkinter.CTk):
-    def __init__(self, camera_types : list[str], lane_num : int):
+    def __init__(self, camera_types : list[str], max_col : int):
         super().__init__()
-
         # Configure window
         self.title("Portlogics")
         self.geometry(f"{screensize[0]}x{screensize[1]}")
@@ -44,12 +36,16 @@ class App(customtkinter.CTk):
         self.rowconfigure(0, weight=5)
         self.rowconfigure(1, weight=2, minsize=int(screensize[1]*0.08))
 
+        # Set grid dimension for view frame
+        self.max_col = max_col
+        self.max_row = len(camera_types)//max_col + (len(camera_types)%max_col > 0)
+
         # Create view frame
         self.view_frame = customtkinter.CTkFrame(self, fg_color=BACK_GROUND_COLOR, corner_radius=4)
         self.view_frame.grid(row=0, column=0, columnspan=1, rowspan=1, pady=5, padx=5, sticky="new")
-        for i in range(NUM_CAMERA_TYPES):
+        for i in range(self.max_row):
             self.view_frame.rowconfigure(i, weight=1)
-        for i in range(NUM_LANES):
+        for i in range(self.max_col):
             self.view_frame.columnconfigure(i, weight=1)
 
         # Create control frame
@@ -61,15 +57,15 @@ class App(customtkinter.CTk):
 
 
         # Dimensions for each camera
-        self.camera_width = int(float(screensize[0])/float(NUM_LANES))
+        self.camera_width = int(float(screensize[0])/float(max_col))
         # camera_width = 740
-        self.camera_height = int(float(screensize[1]*0.8)/float(NUM_CAMERA_TYPES))
+        self.camera_height = int(float(screensize[1]*0.8)/float(self.max_row))
         # self.camera_height = self.camera_width*9/16
         # camera_height = 480
 
         # Adding camera displays
         self.cameras = []
-        for i in range(NUM_CAMERA_TYPES*NUM_LANES):
+        for i in range(self.max_row*max_col):
             self.cameras.append(list())
         row = 0
         col = 0
@@ -80,7 +76,7 @@ class App(customtkinter.CTk):
             camera.append(customtkinter.CTkLabel(camera[1]))
             self._setup_camera_display(camera, row, col, f" {camera_type}")
 
-            if counter != 0 and counter % NUM_CAMERA_TYPES == 0:
+            if counter != 0 and counter % self.max_row == 0:
                 row = 0
                 col += 1
             else:
