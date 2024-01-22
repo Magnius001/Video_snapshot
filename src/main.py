@@ -38,11 +38,7 @@ def main():
     #         stream_names.append(f'{camera_type}-{i}')
     #         camera_urls.append(r"E:\Internship\ML_simplePython_2\ML_simplePython\test_video\x2mate.com-SmartGate.mp4")
             
-    # new_app = gui_.App(['FRONT', 'BACK', 'CON1', 'CON2'], 1)
     new_controller = controller.Controller(camera_names, camera_urls, max_col, r"src\saved_images")
-    
-    # print("Exiting...\n")
-    # os._exit(1)
 
 if __name__ == "__main__":
     main()

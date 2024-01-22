@@ -14,7 +14,7 @@ class Stream_thread(threading.Thread):
         self.stop_flag = False
 
     def run(self):
-        print("Starting " + self.stream_name)
+        # print("Starting " + self.stream_name)
         self.launch_stream()
 
     def launch_stream(self):
@@ -31,7 +31,7 @@ class Stream_thread(threading.Thread):
                 pass
             cv2.waitKey(5)
             rval, frame = cam.read()
-            if self.stop_flag is True:
+            if self.stop_flag or not rval:
                 break
         cam.release()
         os._exit(1)

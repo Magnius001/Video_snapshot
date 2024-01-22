@@ -28,6 +28,8 @@ class App(customtkinter.CTk):
         # Configure window
         self.title("Portlogics")
         self.geometry(f"{screensize[0]}x{screensize[1]}")
+        # Start in fullscreen
+        self.attributes('-fullscreen', True)
         self.config(padx=5, pady=5)
 
         # Configure grid layout 2x3
@@ -76,11 +78,11 @@ class App(customtkinter.CTk):
             camera.append(customtkinter.CTkLabel(camera[1]))
             self._setup_camera_display(camera, row, col, f" {camera_type}")
 
-            if counter != 0 and counter % self.max_row == 0:
-                row = 0
-                col += 1
-            else:
+            if counter != 0 and counter % self.max_col == 0:
+                col = 0
                 row += 1
+            else:
+                col += 1
 
             counter += 1
 
