@@ -1,3 +1,4 @@
+import os
 import customtkinter
 import cv2
 from PIL import Image
@@ -16,7 +17,9 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 
 # Define colors
 BACK_GROUND_COLOR = '#2c2f33'
-ACCENT_COLOR = '#7289da'
+# ACCENT_COLOR = '#7289da'
+# ACCENT_COLOR = '#12ee64'
+ACCENT_COLOR = '#0ad355'
 GREEN_STATUS_COLOR = '#58e91d'
 RED_STATUS_COLOR = '#f44336'
 WHITE_COLOR = '#ffffff'
@@ -76,7 +79,7 @@ class App(customtkinter.CTk):
             camera.append(customtkinter.CTkFrame(self.view_frame))
             camera.append(customtkinter.CTkLabel(camera[0]))
             camera.append(customtkinter.CTkLabel(camera[1]))
-            self._setup_camera_display(camera, row, col, f" {camera_type}")
+            self._setup_camera_display(camera, row, col, f" {camera_type.capitalize()}")
 
             if counter != 0 and counter % self.max_col == 0:
                 col = 0
@@ -100,6 +103,9 @@ class App(customtkinter.CTk):
 
         # 
         self.status_counter = 0
+
+        # Save folder path
+        self.folder_path = 'saved_images'
                 
         
     def _setup_camera_display(self, _display:list, row:int, col:int, camera_type: str):
@@ -113,7 +119,7 @@ class App(customtkinter.CTk):
         _display[1].configure(width=self.camera_width, height=self.camera_height, text='', bg_color= 'transparent', anchor='s')
         _display[1].grid(row=0, column=0, padx=5, pady=5, sticky="n")
 
-        _display[2].configure(text=camera_type, text_color=WHITE_COLOR, bg_color= ACCENT_COLOR, corner_radius=0, font=customtkinter.CTkFont(size=10, weight="bold"))
+        _display[2].configure(text=camera_type, text_color=WHITE_COLOR, bg_color= ACCENT_COLOR, corner_radius=0, font=customtkinter.CTkFont(size=18, weight="bold"))
         _display[2].place(relx=1, rely=1, x=0, y=1,anchor="se")
     
     def update_camera_display(self, images: list[tuple]):
@@ -147,8 +153,12 @@ class App(customtkinter.CTk):
     def clear_status_display(self):
         self.status_display.configure(text='')
 
-    def save_images(self):
-        self.update_status(save_image.save_classified_images(self.images, 'saved_images'))
+    def save_images(self, container_details: str = None):
+        folder_path = self.folder_path
+        if container_details is not None:
+            folder_path =  os.path.join(folder_path, container_details)
+            print(f"{self.folder_path} - New path: {folder_path}\n")
+        self.update_status(save_image.save_classified_images(self.images, folder_path))
 
 
 def test(new_app : App):

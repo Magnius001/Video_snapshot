@@ -3,6 +3,7 @@ import threading
 from stream_processing import stream_thread
 from my_gui import gui_
 from output_handler import save_image
+from http_server import http_server
 
 # Defining all types of yolo models
 PLATE_REGION = 0
@@ -39,6 +40,9 @@ class Controller():
         # Init GUI
         self.app = gui_.App(stream_names, max_col)
         # self.app.bind('<KeyPress>', self.close_gui())
+        # Bind http server
+        # self.server = http_server.trigger_server(self.app)
+        threading.Thread(target=http_server.trigger_server, args=(self.app,)).start()
         self.app.after(UPDATE_INTERVAL, self.update_gui)
         self.app.mainloop()
         # print("Stopping streams...\n")
