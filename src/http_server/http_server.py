@@ -23,7 +23,7 @@ class Trigger_handler(BaseHTTPRequestHandler):
         print("Getting\n")
         print("Path = ", self.path)
         if self.app is not None:
-            self.app.save_images('test')
+            self.app.save_images(self.path[1:])
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
