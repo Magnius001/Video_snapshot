@@ -28,3 +28,9 @@ class Trigger_handler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         self.wfile.write(bytes("<html><body><h1>Hello world!</h1></body></html>", "utf-8"))
+    def do_POST(self):
+        print("Receiving POST...\n")
+        self._set_headers()
+        content_len = int(self.headers.getheader('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        self.wfile.write("received post request:<br>{}".format(post_body))
