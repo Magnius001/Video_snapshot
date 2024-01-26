@@ -22,12 +22,14 @@ class SampleHTTP(BaseHTTPRequestHandler):
         print("POST received.\n")
         self._set_headers()
         content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
+        post_body = self.rfile.read(content_len).decode("utf-8")
         try:
             post_body = json.loads(post_body)
             # print(f"Test: {json.dumps(post_body)} - Type: {type(json.dumps(post_body))}\n")
-        except json.decoder.JSONDecodeError:
-            print("Not json format!")
+            # EX:
+            # curl -X POST http://localhost:9999 -d '{"fplate" : "51G12345", "bplate" : "51G67890", "c1" : "ABCD123456", "c2" : "NA"}'
+        except json.decoder.JSONDecodeError as e:
+            print(e)
         print(f"Header: {(self.headers.get('Action'))} - Content: {(post_body)} - Type: {type(post_body)}\n")
         self.wfile.write(bytes(f"Content: {post_body}", "utf-8"))
 
