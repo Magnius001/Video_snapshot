@@ -12,7 +12,7 @@ class SampleHTTP(BaseHTTPRequestHandler):
 
     def do_GET(self):
         print("Getting\n")
-        print("Path = ", self.path)
+        print("Path = ", self.path[1:])
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
@@ -27,7 +27,7 @@ class SampleHTTP(BaseHTTPRequestHandler):
             post_body = json.loads(post_body)
             # print(f"Test: {json.dumps(post_body)} - Type: {type(json.dumps(post_body))}\n")
         except json.decoder.JSONDecodeError:
-            pass
+            print("Not json format!")
         print(f"Header: {(self.headers.get('Action'))} - Content: {(post_body)} - Type: {type(post_body)}\n")
         self.wfile.write(bytes(f"Content: {post_body}", "utf-8"))
 
