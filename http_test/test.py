@@ -27,7 +27,7 @@ class SampleHTTP(BaseHTTPRequestHandler):
             post_body = json.loads(post_body)
             # print(f"Test: {json.dumps(post_body)} - Type: {type(json.dumps(post_body))}\n")
             # EX:
-            # curl -X POST http://localhost:9999 -d '{"fplate" : "51G12345", "bplate" : "51G67890", "c1" : "ABCD123456", "c2" : "NA"}'
+            # curl -X POST -H "Action : Shot" http://localhost:9999 -d '{"fplate" : "51G12345", "bplate" : "51G67890", "c1" : "ABCD123456", "c2" : "NA"}'
         except json.decoder.JSONDecodeError as e:
             print(e)
         print(f"Header: {(self.headers.get('Action'))} - Content: {(post_body)} - Type: {type(post_body)}\n")
