@@ -5,8 +5,9 @@ import cv2
 import numpy
 from datetime import datetime
 
-def save_classified_images(classified_images: list[tuple], folder_path:str) -> list[str]:
-    # folder_path =  os.path.join(folder_path, f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S_%f')}")
+def save_classified_images(classified_images: list[tuple], folder_path:str, details:str = None) -> list[str]:
+    folder_path =  os.path.join(folder_path, f"{datetime.now().strftime('%y%m%d%H%M%S')}_{details}")
+    print(f"Saved in: {folder_path}\n")
     pathlib.Path(folder_path).mkdir(parents=True, exist_ok=True)
     # print(type(classified_images))
     saved_file_paths = []

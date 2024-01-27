@@ -157,8 +157,8 @@ class App(customtkinter.CTk):
         folder_path = self.folder_path
         if container_details is not None:
             folder_path =  os.path.join(folder_path, container_details)
-            print(f"{self.folder_path} - New path: {folder_path}\n")
-        self.update_status(save_image.save_classified_images(self.images, folder_path))
+            print(f"Saved in: {self.folder_path}\n")
+        self.update_status(save_image.save_classified_images(self.images, self.folder_path, container_details))
 
 
 def test(new_app : App):
