@@ -53,7 +53,11 @@ class Trigger_handler(BaseHTTPRequestHandler):
             except:
                 pass
             try:
-                file_code += f"_{post_body['cntno']}"
+                file_code += f"_{post_body['cntno1']}"
+            except:
+                pass
+            try:
+                file_code += f"_{post_body['cntno2']}"
             except:
                 pass
         except json.decoder.JSONDecodeError as e:

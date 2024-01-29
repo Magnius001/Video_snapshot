@@ -24,14 +24,15 @@ class Stream_thread(threading.Thread):
         else:
             rval = False
 
-        while rval:
+        while True:
             try:
-                self.buffer.put((frame,self.stream_name), block=False)
+                if rval:
+                    self.buffer.put((frame,self.stream_name), block=False)
             except:
                 pass
-            cv2.waitKey(5)
+            cv2.waitKey(1)
             rval, frame = cam.read()
-            if self.stop_flag or not rval:
+            if self.stop_flag:
                 break
         cam.release()
         os._exit(1)

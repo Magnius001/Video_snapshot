@@ -32,7 +32,8 @@ class App(customtkinter.CTk):
         self.title("Portlogics")
         self.geometry(f"{screensize[0]}x{screensize[1]}")
         # Start in fullscreen
-        self.attributes('-fullscreen', True)
+        # self.attributes('-fullscreen', True)
+        self.state('zoomed')
         self.config(padx=5, pady=5)
 
         # Configure grid layout 2x3
