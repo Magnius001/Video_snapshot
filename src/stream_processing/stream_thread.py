@@ -18,7 +18,9 @@ class Stream_thread(threading.Thread):
         self.launch_stream()
 
     def launch_stream(self):
-        cam = cv2.VideoCapture(self.stream_url)
+        cam = cv2.VideoCapture(self.stream_url, cv2.CAP_ANY)
+        # cam.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        print(f"Stream resolution: {cam.get(cv2.CAP_PROP_FRAME_WIDTH)} x {cam.get(cv2.CAP_PROP_FRAME_HEIGHT)} - {cam.getBackendName()}\n")
         if cam.isOpened():
             rval, frame = cam.read()
         else:
@@ -27,6 +29,7 @@ class Stream_thread(threading.Thread):
         while True:
             try:
                 if rval:
+                    # frame = cv2.resize(frame, (640, 640))
                     self.buffer.put((frame,self.stream_name), block=False)
             except:
                 pass

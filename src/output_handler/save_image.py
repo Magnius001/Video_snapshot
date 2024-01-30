@@ -13,7 +13,7 @@ def save_classified_images(classified_images: list[tuple], folder_path:str, deta
     saved_file_paths = []
     for element in classified_images:
         file_path = os.path.join(folder_path, f"{element[1]}.jpg")
-        if not cv2.imwrite(file_path, element[0]):
+        if not cv2.imwrite(file_path, cv2.resize(element[0], (640, 640)), [cv2.IMWRITE_JPEG_QUALITY, 50]):
             return None
         saved_file_paths.append(file_path)
     return saved_file_paths

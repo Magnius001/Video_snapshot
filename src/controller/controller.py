@@ -11,7 +11,7 @@ PLATE_OCR = 1
 CONTAINER_1_CODE = 2
 CONTAINER_2_CODE = 3
 # Defining gui refresh rate
-UPDATE_INTERVAL = 15 #ms
+UPDATE_INTERVAL = 40 #ms
 
 
 # Responsible for controlling the threads, GUI, transfering data from streams to GUI, storing models
@@ -56,7 +56,9 @@ class Controller():
         for buffer in self.cam_buffers:
             labeled_frame = buffer.get()
             if labeled_frame is None:
-                break
+                print("Unable to get from all buffer\n")
+                self.app.after(UPDATE_INTERVAL, self.update_gui)
+                return
             current_frames.append(labeled_frame)
         
         if len(current_frames) != 0:

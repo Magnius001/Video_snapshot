@@ -42,7 +42,7 @@ class Trigger_handler(BaseHTTPRequestHandler):
         try:
             post_body = json.loads(post_body)
             # EX:
-            # curl -X POST -H "Action : Shot" http://localhost:9999 -d '{"fplate" : "51G12345", "bplate" : "51G67890", "c1" : "ABCD123456", "c2" : "NA"}'
+            # curl -X POST -H "Action: Shot" http://localhost:9999 -d '{"fplate" : "51G12345", "bplate" : "51G67890", "c1" : "ABCD123456", "c2" : "NA"}'
             # file_code = f"{post_body['fplate']}{post_body['bplate']}_{post_body['cntno']}"
             try:
                 file_code = f"{post_body['fplate']}"
