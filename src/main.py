@@ -1,6 +1,5 @@
 import configparser
 from controller import controller
-
 # # Defining all types of yolo models
 # PLATE_REGION = 0
 # PLATE_OCR = 1

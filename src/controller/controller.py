@@ -4,6 +4,11 @@ from stream_processing import stream_thread
 from my_gui import gui_
 from output_handler import save_image
 from http_server import http_server
+from log_modules import custom_logger
+import cv2
+
+with open('cv2_buildInfo.log', 'w', newline='') as file:
+    file.write(cv2.getBuildInformation())
 
 # Defining all types of yolo models
 PLATE_REGION = 0
@@ -13,11 +18,11 @@ CONTAINER_2_CODE = 3
 # Defining gui refresh rate
 UPDATE_INTERVAL = 40 #ms
 
-
 # Responsible for controlling the threads, GUI, transfering data from streams to GUI, storing models
 class Controller():
     # Initialize the class with a list of camera names and urls, current version only support 4 cams
     def __init__(self, stream_names: list[str], stream_urls: list[str], max_col: int, folder_path: str) -> None:
+        self.logger = custom_logger.get_logger("__Controller__")
         # Folder to save image
         self.folder_path = folder_path
         # Creat event flag for when a truck is present in the lane
@@ -27,7 +32,6 @@ class Controller():
         # Create single element queue for each cameras
         for i in range(len(stream_names)):
             self.cam_buffers.append(queue.Queue(maxsize=1))
-
         self.camera_streams = []
         for i in range(len(stream_names)):
             # Add and start camera streams
@@ -42,6 +46,7 @@ class Controller():
         # self.app.bind('<KeyPress>', self.close_gui())
         # Bind http server
         # self.server = http_server.trigger_server(self.app)
+
         threading.Thread(target=http_server.trigger_server, args=(self.app,)).start()
         self.app.after(UPDATE_INTERVAL, self.update_gui)
         self.app.mainloop()
@@ -53,17 +58,16 @@ class Controller():
     def update_gui(self):
         current_frames = []
         # print("Updating...\n")
-        for buffer in self.cam_buffers:
-            labeled_frame = buffer.get()
-            if labeled_frame is None:
-                print("Unable to get from all buffer\n")
-                self.app.after(UPDATE_INTERVAL, self.update_gui)
-                return
-            current_frames.append(labeled_frame)
+        try:
+            for buffer in self.cam_buffers:
+                labeled_frame = buffer.get(block=False)
+                current_frames.append(labeled_frame)
+            if len(current_frames) != 0:
+                self.app.update_camera_display(current_frames)
+        except queue.Empty:
+            # logger.warn(f"One or more buffers are empty")
+            pass
         
-        if len(current_frames) != 0:
-            self.app.update_camera_display(current_frames)
-            
         self.app.after(UPDATE_INTERVAL, self.update_gui)
 
     def save_images(self):

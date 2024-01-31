@@ -3,6 +3,7 @@ import customtkinter
 import cv2
 from PIL import Image
 from output_handler import save_image
+from log_modules import custom_logger
 
 # Get screen resolution
 import ctypes
@@ -23,6 +24,8 @@ ACCENT_COLOR = '#0ad355'
 GREEN_STATUS_COLOR = '#58e91d'
 RED_STATUS_COLOR = '#f44336'
 WHITE_COLOR = '#ffffff'
+
+gui_logger = custom_logger.get_logger("__GUI__")
 
 # Main app
 class App(customtkinter.CTk):
@@ -125,14 +128,17 @@ class App(customtkinter.CTk):
     
     def update_camera_display(self, images: list[tuple]):
         self.images=images
-        for camera, im in zip(self.cameras, images):
-            im = im[0]
-            blue,green,red = cv2.split(im)
-            im = cv2.merge((red,green,blue))
-            im = Image.fromarray(im)
-            imtk = customtkinter.CTkImage(dark_image=im, size=(self.camera_width, self.camera_height-5))
-            camera[1].configure(image = imtk)
-            camera[1].image = imtk
+        try:
+            for camera, im in zip(self.cameras, images):
+                im = im[0]
+                blue,green,red = cv2.split(im)
+                im = cv2.merge((red,green,blue))
+                im = Image.fromarray(im)
+                imtk = customtkinter.CTkImage(dark_image=im, size=(self.camera_width, self.camera_height-5))
+                camera[1].configure(image = imtk)
+                camera[1].image = imtk
+        except Exception as e:
+            gui_logger.error(f"In update cam display: {e}")
         if self.status_counter >= 200:
             self.clear_status_display()
             self.status_counter = 0
@@ -142,9 +148,11 @@ class App(customtkinter.CTk):
         if file_paths is None:
             # Error saving
             output = "Unable to save images."
+            gui_logger.warn(output)
             status_color = RED_STATUS_COLOR
         else:
             output = f"Sucessfully saved {len(file_paths)} images."
+            gui_logger.info(output)
             # for file_path in file_paths:
             #     output += f"\n    {file_path}"
             status_color = GREEN_STATUS_COLOR
