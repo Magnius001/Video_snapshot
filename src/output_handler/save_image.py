@@ -5,6 +5,7 @@ import cv2
 import numpy
 from datetime import datetime
 
+# Create folder with name from time + details, save image to it with each corresponding stream names
 def save_classified_images(classified_images: list[tuple], folder_path:str, details:str = None) -> list[str]:
     folder_path =  os.path.join(folder_path, f"{datetime.now().strftime('%y%m%d%H%M%S')}_{details}")
     print(f"Saved in: {folder_path}\n")
@@ -13,11 +14,14 @@ def save_classified_images(classified_images: list[tuple], folder_path:str, deta
     saved_file_paths = []
     for element in classified_images:
         file_path = os.path.join(folder_path, f"{element[1]}.jpg")
+        # Return if one image cannot be saved
         if not cv2.imwrite(file_path, cv2.resize(element[0], (640, 640)), [cv2.IMWRITE_JPEG_QUALITY, 50]):
             return None
         saved_file_paths.append(file_path)
+    # Return list of directories of all saved images
     return saved_file_paths
-    
+
+# Not used
 def save_one_image(classified_image: numpy.ndarray, folder_path:str) -> bool:
     pathlib.Path(folder_path).mkdir(parents=True, exist_ok=True)
     # print(type(classified_images))
@@ -26,6 +30,7 @@ def save_one_image(classified_image: numpy.ndarray, folder_path:str) -> bool:
     # print(flag, '\n')
     return flag
 
+# Not used
 def save_classified_image(classified_image: numpy.ndarray, image_name: str, folder_path:str) -> str:
     pathlib.Path(folder_path).mkdir(parents=True, exist_ok=True)
     file_path = os.path.join(folder_path, f"{image_name}.jpg")

@@ -25,6 +25,9 @@ GREEN_STATUS_COLOR = '#58e91d'
 RED_STATUS_COLOR = '#f44336'
 WHITE_COLOR = '#ffffff'
 
+#Status display clear interval (frames)
+STATUS_CLEAR_INTERVAL = 150
+
 gui_logger = custom_logger.get_logger("__GUI__")
 
 # Main app
@@ -113,16 +116,17 @@ class App(customtkinter.CTk):
                 
         
     def _setup_camera_display(self, _display:list, row:int, col:int, camera_type: str):
+        # WidgetFrame
         _display[0].configure(width=450, fg_color=BACK_GROUND_COLOR, border_color=ACCENT_COLOR, border_width=2, corner_radius=0)
         _display[0].grid(row=row, column=col, pady=5, padx=5)
         _display[0].rowconfigure(0, weight=1)
-        # _display[0].rowconfigure(1, weight=3)
-        # _display[0].rowconfigure(2, weight=3)
         _display[0].columnconfigure(0, weight=1)
 
+        # Label which has the camera image
         _display[1].configure(width=self.camera_width, height=self.camera_height, text='', bg_color= 'transparent', anchor='s')
         _display[1].grid(row=0, column=0, padx=5, pady=5, sticky="n")
 
+        # Label to store the camera name
         _display[2].configure(text=camera_type, text_color=WHITE_COLOR, bg_color= ACCENT_COLOR, corner_radius=0, font=customtkinter.CTkFont(size=18, weight="bold"))
         _display[2].place(relx=1, rely=1, x=0, y=1,anchor="se")
     
@@ -131,15 +135,18 @@ class App(customtkinter.CTk):
         try:
             for camera, im in zip(self.cameras, images):
                 im = im[0]
+                # Convert BGR to RGB
                 blue,green,red = cv2.split(im)
                 im = cv2.merge((red,green,blue))
                 im = Image.fromarray(im)
+                # Add image to GUI
                 imtk = customtkinter.CTkImage(dark_image=im, size=(self.camera_width, self.camera_height-5))
                 camera[1].configure(image = imtk)
                 camera[1].image = imtk
         except Exception as e:
             gui_logger.error(f"In update cam display: {e}")
-        if self.status_counter >= 200:
+        if self.status_counter >= STATUS_CLEAR_INTERVAL:
+            # Clear status display after certain number of GUI refresh cycles
             self.clear_status_display()
             self.status_counter = 0
         self.status_counter += 1
